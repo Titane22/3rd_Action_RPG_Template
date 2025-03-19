@@ -6,6 +6,7 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "Kismet/GameplayStatics.h"
+#include "Enemy/I_EnemyAI.h"
 #include "GameFramework/Character.h"
 
 AAIC_EnemyBase::AAIC_EnemyBase()
@@ -29,28 +30,25 @@ void AAIC_EnemyBase::OnPossess(APawn* InPawn)
 		{
 			if (ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0))
 			{
-				GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Player Found"));
-				BlackboardComp->SetValueAsObject(AttackTargetKeyName, PlayerCharacter);
-			}
-			else
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Player Not Found"));
+				SetStateAsPassive();
 			}
 		}, 1.0f, false);
 	}
-	else if (!BlackboardComp)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("BlackboardComp"));
+}
 
+void AAIC_EnemyBase::SetStateAsPassive()
+{
+	if (BlackboardComp && BehaviorTreeAsset && BehaviorTreeAsset->BlackboardAsset)
+	{
+		BlackboardComp->SetValueAsEnum(StateKeyName, static_cast<uint8>(EAIState::Passive));
 	}
-	else if (!BehaviorTreeAsset)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("BehaviorTreeAsset"));
+}
 
-	}
-	else if (!BehaviorTreeAsset->BlackboardAsset)
+void AAIC_EnemyBase::SetStateAsAttacking(AActor* TargetActor)
+{
+	if (TargetActor && BlackboardComp && BehaviorTreeAsset && BehaviorTreeAsset->BlackboardAsset)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("BehaviorTreeAsset->BlackboardAsset"));
-
+		BlackboardComp->SetValueAsObject(AttackTargetKeyName, TargetActor);
+		BlackboardComp->SetValueAsEnum(StateKeyName, static_cast<uint8>(EAIState::Attacking));
 	}
 }

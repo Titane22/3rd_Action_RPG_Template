@@ -10,6 +10,28 @@ ATemplateEnemyBase::ATemplateEnemyBase()
 	
 }
 
+float ATemplateEnemyBase::SetMovementSpeed(EMovementState Speed)
+{
+	switch (Speed)
+	{
+	case EMovementState::Idle:
+		GetCharacterMovement()->MaxWalkSpeed = 0.0f;
+		break;
+	case EMovementState::Walking:
+		GetCharacterMovement()->MaxWalkSpeed = 100.0f;
+		break;
+	case EMovementState::Jogging:
+		GetCharacterMovement()->MaxWalkSpeed = 300.0f;
+		break;
+	case EMovementState::Sprinting:
+		GetCharacterMovement()->MaxWalkSpeed = 550.0f;
+		break;
+	default:
+		break;
+	}
+	return GetCharacterMovement()->MaxWalkSpeed;
+}
+
 void ATemplateEnemyBase::BeginPlay()
 {
 	Super::BeginPlay();

@@ -19,6 +19,10 @@ public:
 
 	virtual void OnPossess(APawn* InPawn) override;
 
+	void SetStateAsPassive();
+
+	void SetStateAsAttacking(AActor* TargetActor);
+
 protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
@@ -29,4 +33,7 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Blackboard Keys")
 	FName AttackTargetKeyName = FName("AttackTarget");
+
+	UPROPERTY(EditDefaultsOnly, Category = "Blackboard Keys")
+	FName StateKeyName = FName("State");
 };
